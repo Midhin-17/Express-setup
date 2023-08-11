@@ -7,7 +7,7 @@ import {MongoClient} from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
-console.log(process.env.MONGO_URL);
+// console.log(process.env.MONGO_URL);
 
 const app = express()
 const PORT= process.env.PORT;
@@ -90,6 +90,7 @@ app.get('/movies/:id', function (request, response) {
  console.log(request.params);
 })
 
+//find data
 app.get('/movies/:id', async function (request, response) {
    const{ id }  = request.params;
 
@@ -99,6 +100,7 @@ app.get('/movies/:id', async function (request, response) {
 
 })
 
+//post data
 app.post("/movies",async function (request,response) {
   const addmovie = request.body;
   console.log(addmovie);
@@ -106,13 +108,13 @@ app.post("/movies",async function (request,response) {
   const result = await client.db("movies").collection("movies").insertMany(addmovie);
   response.send(result);
 })
-
+//delete data 
 app.delete('/movies/:id', async function (request, response) {
   const{ id }  = request.params;
 
   const movies= await client.db("movies").collection ("movies").deleteOne({id : id});
 
-  movies ?  response.send(movies) : response.status(404).send({msg : "No Such Movie Found"});
+  movies ?  response.send(movies) :send({msg : "No Such Movie Found"});
 
 })
 
