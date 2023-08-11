@@ -38,9 +38,9 @@ app.get('/', function (request, response) {
 
 //to get the movies data
 
-app.get('/movies', function (request, response) {
-  response.send(movies) //'response.send()' method is used to send the 'movies' data back to the client as the response.
-})
+// app.get('/movies', function (request, response) {
+//   response.send(movies) //'response.send()' method is used to send the 'movies' data back to the client as the response.
+// })
 
 //query for movies using rating
 
@@ -48,15 +48,17 @@ app.get('/movies', async function (request, response) {
   // const { rating } = request.query;
 
   console.log(request.query);
+
   const filter=request.query;
+
   if (filter.rating){
 
     filter.rating= +filter.rating;
   }
 
-  const allMovies = await client.db("movies").find("movies").find(request.query).toArray();
+  const allMovies = await client.db("movies").collection("movies").find(filter).toArray();
 
-  request.send(allMovies);
+  response.send(allMovies);
 //   if (rating){
 //     response.send( movies.filter((mv) => mv.rating == rating)) ;
 //   }
@@ -70,25 +72,25 @@ app.get('/movies', async function (request, response) {
 
 // using get for given id
 
-app.get('/movies/:id', function (request, response) {
-  const{ id }  = request.params;//request.params is a tool that simplifies the process of extracting and working with parameters from HTTP requests in your code. //The 'request' parameter represents the incoming HTTP request made by the client.
-  // console.log(id,"id");
+// app.get('/movies/:id', function (request, response) {
+//   const{ id }  = request.params;//request.params is a tool that simplifies the process of extracting and working with parameters from HTTP requests in your code. //The 'request' parameter represents the incoming HTTP request made by the client.
+//    console.log(id,"id");
 
-  // const movie =  movies.filter((mv) => mv.id === id ); the find method is used instead of filter since we want to find a single movie with a matching id.
+//   // const movie =  movies.filter((mv) => mv.id === id ); the find method is used instead of filter since we want to find a single movie with a matching id.
 
-  const movie =  movies.find((mv) => mv.id === id );
+//   const movie =  movies.find((mv) => mv.id === id );
 
-  if (movie){
+//   if (movie){
 
-    response.send(movie)
-  }
-  else {
-    response.status(404).send({msg : "No Such Movie Found"});
-  }
-  // movie ?  response.send(movie) : response.status(404).send({msg : "No Such Movie Found"});
+//     response.send(movie)
+//   }
+//   else {
+//     response.status(404).send({msg : "No Such Movie Found"});
+//   }
+//   // movie ?  response.send(movie) : response.status(404).send({msg : "No Such Movie Found"});
 
- console.log(request.params);
-})
+//  console.log(request.params);
+// })
 
 //find data
 app.get('/movies/:id', async function (request, response) {
@@ -108,15 +110,18 @@ app.post("/movies",async function (request,response) {
   const result = await client.db("movies").collection("movies").insertMany(addmovie);
   response.send(result);
 })
-//delete data 
+// delete data 
 app.delete('/movies/:id', async function (request, response) {
-  const{ id }  = request.params;
+  const { id }  = request.params;
+  
+  const movieResult = await client.db("movies").collection("movies").deleteOne({id : id})
+  
+  movieResult ?  response.send(movieResult) : response.status(404).send({msg : "No Such Movie Found"});
 
-  const movies= await client.db("movies").collection ("movies").deleteOne({id : id});
-
-  movies ?  response.send(movies) :send({msg : "No Such Movie Found"});
-
+  // console.log(request.params);
 })
+
+
 
 app.listen(PORT,()=>console.log(` Listening on the ${PORT}`));
 
