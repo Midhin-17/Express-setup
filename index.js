@@ -36,14 +36,14 @@ app.get('/', function (request, response) {
 
 
 
-//to get the movies data
+//to get the movies data using localStorage
 
 // app.get('/movies', function (request, response) {
 //   response.send(movies) //'response.send()' method is used to send the 'movies' data back to the client as the response.
 // })
 
-//query for movies using rating
 
+//query for movies using rating from online 
 app.get('/movies', async function (request, response) {
   // const { rating } = request.query;
 
@@ -70,7 +70,7 @@ app.get('/movies', async function (request, response) {
 
 });
 
-// using get for given id
+// using get for given id using local storage
 
 // app.get('/movies/:id', function (request, response) {
 //   const{ id }  = request.params;//request.params is a tool that simplifies the process of extracting and working with parameters from HTTP requests in your code. //The 'request' parameter represents the incoming HTTP request made by the client.
@@ -92,7 +92,8 @@ app.get('/movies', async function (request, response) {
 //  console.log(request.params);
 // })
 
-//find data
+//find data from online storage
+
 app.get('/movies/:id', async function (request, response) {
    const{ id }  = request.params;
 
@@ -102,7 +103,8 @@ app.get('/movies/:id', async function (request, response) {
 
 })
 
-//post data
+//post data from online storage
+
 app.post("/movies",async function (request,response) {
   const addmovie = request.body;
   console.log(addmovie);
@@ -110,7 +112,8 @@ app.post("/movies",async function (request,response) {
   const result = await client.db("movies").collection("movies").insertMany(addmovie);
   response.send(result);
 })
-// delete data 
+// delete data from online storage
+
 app.delete('/movies/:id', async function (request, response) {
   const { id }  = request.params;
   
@@ -121,6 +124,17 @@ app.delete('/movies/:id', async function (request, response) {
   // console.log(request.params);
 })
 
+//update data from online storage
+
+app.put('/movies/:id', async function (request, response) {
+  const{ id }  = request.params;
+  const updateData = request.body
+
+  
+const result  = await client.db("movies").collection("movies").updateOne({id : id}, {$set:updateData})
+  response.send(result);
+
+})
 
 
 app.listen(PORT,()=>console.log(` Listening on the ${PORT}`));
