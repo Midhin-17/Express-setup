@@ -6,6 +6,8 @@ import express  from "express";
 import {MongoClient} from "mongodb";
 import dotenv from "dotenv";
 import { movieRouter } from "./movie.js";
+import { usersRouter } from "./users.js";
+import { genPassword } from "./helper.js";
 
 
 dotenv.config();
@@ -64,7 +66,12 @@ app.get('/', function (request, response) {
 
 
 app.use("/movies",movieRouter);
+app.use("/users",usersRouter);
 
+//genpassword
+
+
+//  console.log( await genPassword("Midhin"));
 
 
 app.listen(PORT,()=>console.log(` Listening on the ${PORT}`));
