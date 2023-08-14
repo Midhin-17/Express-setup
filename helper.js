@@ -26,3 +26,17 @@ export async function getAllMovies(filter) {
     return hashPassword;
   
   }
+
+  export  async function createUser(newUser){
+    return await client.db("movies").collection("users").insertOne(newUser);
+  }
+
+  export async function getUserByName(username){
+
+    return await client.db("movies").collection("users").findOne({ username: username});
+  }
+
+  export async function verifyPassword(password,storePassword){
+
+    return await bcrypt.compare(password,storePassword)
+  }
